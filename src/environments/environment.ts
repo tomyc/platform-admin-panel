@@ -1,7 +1,7 @@
-// Zawartoœæ pliku dla bie¿¹cego œrodowiska spowoduje ich zast¹pienie podczas kompilacji.
-// System kompilacji domyœlnie dzia³a w œrodowisku dev, które u¿ywa `environment.ts`, ale
-// jeœli zrobisz` ng build --env = prod`, u¿yjesz zamiast tego `environment.prod.ts`.
-// Lista które œrodowisko jest aktualnie mapowane do pliku, mo¿na znaleŸæ w `.angular-cli.json`.
+// ZawartoÅ“Ã¦ pliku dla bieÂ¿Â¹cego Å“rodowiska spowoduje ich zastÂ¹pienie podczas kompilacji.
+// System kompilacji domyÅ“lnie dziaÂ³a w Å“rodowisku dev, ktÃ³re uÂ¿ywa `environment.ts`, ale
+// jeÅ“li zrobisz` ng build --env = prod`, uÂ¿yjesz zamiast tego `environment.prod.ts`.
+// Lista ktÃ³re Å“rodowisko jest aktualnie mapowane do pliku, moÂ¿na znaleÅ¸Ã¦ w `.angular-cli.json`.
 
 export const environment = {
   production: false,
@@ -9,7 +9,7 @@ export const environment = {
   googleClientId: '',
   facebookAppId: '',
   githubClientId: '',
-  mainServiceURL: 'http://devicehive.home/api/rest',
-  authServiceURL: 'http://devicehive.home/auth/rest',
-  pluginServiceURL: 'http://devicehive.home/plugin/rest'
+  mainServiceURL: 'http://device.domena.pl/api/rest',
+  authServiceURL: 'http://device.domena.pl/auth/rest',
+  pluginServiceURL: 'http://device.domena.pl/plugin/rest'
 };
