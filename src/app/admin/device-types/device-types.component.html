@@ -1,0 +1,99 @@
+<div class="container">
+	<div class="table-container">
+		<table class="table">
+			<thead class="thead-light">
+				<tr>
+					<th scope="col">Typ urządzenia <dh-tip
+							[text]="helpService.getDeviceTypeNameTip()"></dh-tip></th>
+					<th scope="col">Opis <dh-tip
+							[text]="helpService.getDeviceTypeDescriptionTip()"></dh-tip></th>
+					<th scope="col" class="actions-column" *ngIf="isAdmin">Czynność</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr *ngFor="let deviceType of deviceTypes">
+					<td>{{deviceType.name}}</td>
+					<td>{{deviceType.description}}</td>
+					<td *ngIf="isAdmin">
+						<button class="btn btn-primary btn-sm"
+							(click)="openDeviceTypeModal(editDeviceTypeModal, deviceType)">Edytuj</button>
+						<button class="btn btn-danger btn-sm"
+							(click)="deleteDeviceType(deviceType)">Usuń</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p *ngIf="deviceTypes && deviceTypes.length === 0" class="text-center">Nie
+			masz dostępu do żadnego typu urządzenia</p>
+	</div>
+
+	<button class="btn btn-success float-right btn-add" *ngIf="isAdmin"
+		(click)="openDeviceTypeModal(newDeviceTypeModal)">Dodaj nowy
+		typ urządzenia</button>
+</div>
+
+<ng-template #newDeviceTypeModal let-c="close" let-d="dismiss">
+<div class="modal-header">
+	<h4 class="modal-title">Utwórz nowy typ urządzenia</h4>
+	<button type="button" class="close" aria-label="Close"
+		(click)="d('Close')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<div class="modal-body" *ngIf="newDeviceType">
+	<dh-device-type [deviceType]="newDeviceType"></dh-device-type>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-outline-dark"
+		(click)="d('Cancel')">Zaniechaj</button>
+	<button type="button" class="btn btn-success"
+		(click)="createDeviceType()">Zapisz</button>
+</div>
+</ng-template>
+
+<ng-template #editDeviceTypeModal let-c="close" let-d="dismiss">
+<div class="modal-header">
+	<h4 class="modal-title">Typ urządzenia</h4>
+	<button type="button" class="close" aria-label="Close"
+		(click)="d('Close')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<div class="modal-body" *ngIf="selectedDeviceType">
+	<dh-device-type [deviceType]="selectedDeviceType"></dh-device-type>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-outline-dark"
+		(click)="d('Cancel')">Zaniechaj</button>
+	<button type="button" class="btn btn-success"
+		(click)="updateSelectedDeviceType()">Zapisz</button>
+</div>
+</ng-template>
+
+<ng-template #deleteDeviceTypeModal let-c="close" let-d="dismiss">
+<div class="modal-header">
+	<h4 class="modal-title">Usuń typ urządzenia</h4>
+	<button type="button" class="close" aria-label="Close"
+		(click)="d('Close')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<div class="modal-body" *ngIf="selectedDeviceType">
+	There are devices that belong to this device type. <br> After this
+	action they will be removed. <br> Are you sure you want to delete
+	this device type?
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-outline-dark"
+		(click)="d('Cancel')">Zaniecha</button>
+	<button type="button" class="btn btn-danger"
+		(click)="deleteDeviceTypeForce()">Usuń</button>
+</div>
+</ng-template>

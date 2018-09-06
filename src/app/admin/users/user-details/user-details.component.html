@@ -1,0 +1,166 @@
+<nav>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a routerLink="/admin/users">Użytkownicy</a></li>
+		<li class="breadcrumb-item active">{{user?.id}}</li>
+	</ol>
+</nav>
+
+<div class="container" *ngIf="user">
+	<div>
+		<div class="card">
+			<div class="card-header" (click)="isCollapsed = !isCollapsed">
+				Użytkownik</div>
+
+			<div id="collapse" class="collapse show" [ngbCollapse]="isCollapsed">
+				<div class="card-body">
+					<p>Login: {{user.login}}</p>
+
+					<div class="row">
+						<div class="col-6">
+							<p>Rola: {{userRole[user.role]}}</p>
+						</div>
+						<div class="col-6">
+							<p>Status: {{userStatus[user.status]}}</p>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="textAreaData">Dane (json):</label>
+						<textarea readonly class="form-control-plaintext"
+							id="textAreaData" rows="3" [(ngModel)]="user.data"></textarea>
+					</div>
+
+					<button class="btn btn-primary float-right btn-edit"
+						(click)="openEditUserModal(editUserModal)">Edytuj</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<ngb-tabset *ngIf='user.role !== userRole.ADMIN'> <ngb-tab
+		title="Networks"> <ng-template ngbTabContent>
+	<table class="table">
+		<thead class="thead-light">
+			<tr>
+				<th scope="col">Sieć</th>
+				<th scope="col">Opis</th>
+				<th scope="col">Czynność</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr *ngFor="let network of user.networks">
+				<td>{{network.name}}</td>
+				<td>{{network.description}}</td>
+				<td>
+					<button class="btn btn-danger btn-sm"
+						(click)="revokeAccessToNetwork(network)">Odwołaj dostęp</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p *ngIf="user.networks.length === 0" class="text-center">Ten
+		użytkownik nie należy do żadnej sieci</p>
+
+	<form class="form-inline">
+		<label class="mr-2" for="inputNetwork">Przyznaj dostęp do
+			sieci</label>
+		<div class="input-group mb-3">
+			<input id="inputNetwork" type="text" class="form-control"
+				placeholder="Wybierz sieć" [(ngModel)]="selectedNetwork"
+				[ngModelOptions]="{standalone: true}" [ngbTypeahead]="searchNetwork"
+				(focus)="networksFocus.next($event.target.value)"
+				(click)="networksClick.next($event.target.value)"
+				[inputFormatter]="formatter" [resultTemplate]="rt"
+				#networksTypeahead="ngbTypeahead" />
+			<div class="input-group-append">
+				<button class="btn btn-outline-secondary" type="button"
+					(click)="clearSelectedNetwork()">Wyczyść</button>
+				<button class="btn btn-primary" (click)="grantAccessToNetwork()"
+					[attr.disabled]="selectedNetwork ? null : true">Przyznaj
+					dostęp</button>
+			</div>
+		</div>
+	</form>
+
+	</ng-template> </ngb-tab> <ngb-tab title="Device Types"> <ng-template ngbTabContent>
+	<div class="form-group form-switch">
+		<span class="switch"> <input type="checkbox" class="switch"
+			id="switch-normal" [(ngModel)]="user.allDeviceTypesAvailable"
+			(ngModelChange)="toggleAllowAllDeviceTypes()"> <label
+			for="switch-normal">Wszystkie typy urządzeń są dostępne dla
+				użytkownika</label>
+		</span>
+	</div>
+
+	<table class="table" *ngIf="!user.allDeviceTypesAvailable">
+		<thead class="thead-light">
+			<tr>
+				<th scope="col">Typ urządzenia</th>
+				<th scope="col">Opis</th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr *ngFor="let deviceType of userDeviceTypes">
+				<td>{{deviceType.name}}</td>
+				<td>{{deviceType.description}}</td>
+				<td>
+					<button class="btn btn-danger btn-sm"
+						(click)="revokeAccessToDeviceType(deviceType)">Odwołaj
+						dostęp</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p
+		*ngIf="!user.allDeviceTypesAvailable && userDeviceTypes.length === 0"
+		class="text-center">Użytkownik nie ma dostępu do żadnych typów
+		urządzeń</p>
+
+	<form class="form-inline" *ngIf="!user.allDeviceTypesAvailable">
+		<label class="mr-2" for="inputDeviceType">Przyznaj dostęp do
+			typu urządzenia</label>
+		<div class="input-group mb-3">
+			<input id="inputDeviceType" type="text" class="form-control"
+				placeholder="Wybierz typ urządzenia"
+				[(ngModel)]="selectedDeviceType"
+				[ngModelOptions]="{standalone: true}"
+				[ngbTypeahead]="searchDeviceType"
+				(focus)="deviceTypesFocus.next($event.target.value)"
+				(click)="deviceTypesClick.next($event.target.value)"
+				[inputFormatter]="formatter" [resultTemplate]="rt"
+				#deviceTypesTypeahead="ngbTypeahead" />
+			<div class="input-group-append">
+				<button class="btn btn-outline-secondary" type="button"
+					(click)="clearSelectedDeviceType()">Zmień</button>
+				<button class="btn btn-primary" (click)="grantAccessToDeviceType()">Przydziel
+					dostęp</button>
+			</div>
+		</div>
+
+	</form>
+	</ng-template> </ngb-tab> </ngb-tabset>
+</div>
+
+<ng-template #editUserModal let-c="close" let-d="dismiss">
+<div class="modal-header">
+	<h4 class="modal-title">Edytuj użytkownika</h4>
+	<button type="button" class="close" aria-label="Close"
+		(click)="d('Close')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<div class="modal-body" *ngIf="editUser">
+	<dh-user [user]="editUser"></dh-user>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-outline-dark"
+		(click)="d('Cancel')">Zaniechaj</button>
+	<button type="button" class="btn btn-success" (click)="updateUser()">Zapisz</button>
+</div>
+</ng-template>
+<ng-template #rt let-r="result" let-t="term">{{r.name}}</ng-template>

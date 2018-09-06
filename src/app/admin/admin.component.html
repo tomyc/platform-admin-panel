@@ -1,0 +1,26 @@
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg" id="tour.start">
+	<a class="navbar-brand" routerLink="devices">Platforma Integracyjna</a>
+	<ul class="navbar-nav">
+		<li class="nav-item"><a class="nav-link"
+			routerLinkActive="active" routerLink="users"
+			*ngIf="currentUser?.role === userRole.ADMIN" id="menu.users">Użytkownicy</a></li>
+		<li class="nav-item"><a class="nav-link"
+			routerLinkActive="active" routerLink="networks" id="menu.networks">Sieci</a></li>
+		<li class="nav-item"><a class="nav-link"
+			routerLinkActive="active" routerLink="device-types"
+			id="menu.device-types">Typu urządzeń</a></li>
+		<li class="nav-item"><a class="nav-link"
+			routerLinkActive="active" routerLink="devices" id="menu.devices">Urządzenia</a></li>
+		<li class="nav-item"><a class="nav-link"
+			routerLinkActive="active" routerLink="jwt-tokens" id="menu.jwt">Klucze
+				dostępu</a></li>
+		<li class="nav-item"><a class="nav-link"
+			routerLinkActive="active" routerLink="plugins" id="menu.plugins">Rozszerzenia</a></li>
+	</ul>
+	<ul class="navbar-nav ml-auto">
+		<li class="nav-item"><a class="nav-link" (click)="logOut()">Wyloguj</a>
+		</li>
+	</ul>
+</nav>
+
+<router-outlet *ngIf="currentUser"></router-outlet>

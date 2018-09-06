@@ -1,0 +1,103 @@
+<div class="container">
+	<div class="search-group">
+		<div class="form-group">
+			<label for="inputName">Wyszukaj po nazwie</label> <input type="text"
+				class="form-control" id="inputName" [(ngModel)]="searchName">
+		</div>
+	</div>
+	<div class="table-container">
+		<table class="table">
+			<thead class="thead-light">
+				<tr>
+					<th scope="col">Sieć <dh-tip
+							[text]="helpService.getNetworkNameTip()"></dh-tip></th>
+					<th scope="col">Opis <dh-tip
+							[text]="helpService.getNetworkDescriptionTip()"></dh-tip></th>
+					<th scope="col" class="actions-column" *ngIf="isAdmin">Czynności</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr *ngFor="let network of networks | filter : searchName.trim()">
+					<td>{{network.name}}</td>
+					<td>{{network.description}}</td>
+					<td *ngIf="isAdmin">
+						<button class="btn btn-primary btn-sm"
+							(click)="openNetworkModal(editNetworkModal, network)">Edytuj</button>
+						<button class="btn btn-danger btn-sm"
+							(click)="deleteNetwork(network)">Usuń</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p *ngIf="networks && networks.length === 0" class="text-center">Nie
+			należysz do żadnej sieci</p>
+	</div>
+
+	<button class="btn btn-success float-right btn-add" *ngIf="isAdmin"
+		(click)="openNetworkModal(newNetworkModal)">Dodaj nową sieć</button>
+</div>
+
+<ng-template #newNetworkModal let-c="close" let-d="dismiss">
+<div class="modal-header">
+	<h4 class="modal-title">Utwórz nową sieć</h4>
+	<button type="button" class="close" aria-label="Close"
+		(click)="d('Close')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<div class="modal-body" *ngIf="newNetwork">
+	<dh-network [network]="newNetwork"></dh-network>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-outline-dark"
+		(click)="d('Cancel')">Zaniechaj</button>
+	<button type="button" class="btn btn-success" (click)="createNetwork()">Zapisz</button>
+</div>
+</ng-template>
+
+<ng-template #editNetworkModal let-c="close" let-d="dismiss">
+<div class="modal-header">
+	<h4 class="modal-title">Sieć</h4>
+	<button type="button" class="close" aria-label="Close"
+		(click)="d('Close')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<div class="modal-body" *ngIf="selectedNetwork">
+	<dh-network [network]="selectedNetwork"></dh-network>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-outline-dark"
+		(click)="d('Cancel')">Zaniechaj</button>
+	<button type="button" class="btn btn-success"
+		(click)="updateSelectedNetwork()">Zapisz</button>
+</div>
+</ng-template>
+
+<ng-template #deleteNetworkModal let-c="close" let-d="dismiss">
+<div class="modal-header">
+	<h4 class="modal-title">Usuń sieć</h4>
+	<button type="button" class="close" aria-label="Close"
+		(click)="d('Close')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<div class="modal-body" *ngIf="selectedNetwork">
+	There are devices, connected to this network. <br> After this
+	action they will be removed. <br> Are you sure you want to delete
+	this network?
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-outline-dark"
+		(click)="d('Cancel')">Zaniechaj</button>
+	<button type="button" class="btn btn-danger"
+		(click)="deleteNetworkForce()">Usuń</button>
+</div>
+</ng-template>

@@ -1,0 +1,62 @@
+<div class="form-group">
+	<label for="inputName">Nazwa <dh-tip
+			[text]="helpService.getDeviceNameTip()"></dh-tip></label> <input type="text"
+		class="form-control" id="inputName" placeholder="Nazwa urządzenia"
+		[(ngModel)]="device.name">
+</div>
+
+<ng-template #rt let-r="result" let-t="term">{{r.name}}</ng-template>
+
+<div class="form-group">
+	<label for="inputNetwork">Sieć <dh-tip
+			[text]="helpService.getDeviceNetworkTip()"></dh-tip></label>
+	<div class="input-group mb-3">
+		<input id="inputNetwork" type="text" class="form-control"
+			placeholder="Wybierz sieć" [(ngModel)]="tempNetwork"
+			[ngbTypeahead]="searchNetwork"
+			(focus)="networksFocus.next($event.target.value)"
+			(click)="networksClick.next($event.target.value)"
+			[inputFormatter]="formatter" [resultTemplate]="rt"
+			(ngModelChange)="selectNetwork()" #networksTypeahead="ngbTypeahead" />
+		<div class="input-group-append">
+			<button class="btn btn-outline-secondary" type="button"
+				(click)="clearSelectedNetwork()">Zmień</button>
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label for="inputDeviceType">Typ urządzenia <dh-tip
+			[text]="helpService.getDeviceDeviceTypeTip()"></dh-tip></label>
+	<div class="input-group mb-3">
+		<input id="inputDeviceType" type="text" class="form-control"
+			placeholder="Wybierz typ urządzenia" [(ngModel)]="tempDeviceType"
+			[ngbTypeahead]="searchDeviceType"
+			(focus)="deviceTypesFocus.next($event.target.value)"
+			(click)="deviceTypesClick.next($event.target.value)"
+			[inputFormatter]="formatter" [resultTemplate]="rt"
+			(ngModelChange)="selectDeviceType()"
+			#deviceTypesTypeahead="ngbTypeahead" />
+		<div class="input-group-append">
+			<button class="btn btn-outline-secondary" type="button"
+				(click)="clearSelectedDeviceType()">Zmień</button>
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label for="inputOperation">Status działania <dh-tip
+			[text]="helpService.getDeviceOperationTip()"></dh-tip></label> <select
+		id="inputOperation" class="form-control"
+		[(ngModel)]="device.isBlocked">
+		<option [ngValue]="false">Normalny</option>
+		<option [ngValue]="true">Zablokowany</option>
+	</select>
+</div>
+
+<div class="form-group">
+	<label for="textAreaData">Dane <dh-tip
+			[text]="helpService.getDeviceDataTip()"></dh-tip></label>
+	<textarea class="form-control" id="textAreaData" rows="3"
+		[(ngModel)]="device.data"></textarea>
+</div>

@@ -1,0 +1,62 @@
+<div class="container">
+	<div class="table-container">
+		<table class="table">
+			<thead class="thead-light">
+				<tr>
+					<th scope="col">Login <dh-tip
+							[text]="helpService.getUserLoginTip()"></dh-tip></th>
+					<th scope="col">Rola <dh-tip
+							[text]="helpService.getUserRoleTip()"></dh-tip></th>
+					<th scope="col">Status <dh-tip
+							[text]="helpService.getUserStatusTip()"></dh-tip></th>
+					<th scope="col">Ostatnie logowanie <dh-tip
+							[text]="helpService.getUserLastLoginTip()"></dh-tip></th>
+					<th scope="col">Dane <dh-tip
+							[text]="helpService.getUserDataTip()"></dh-tip></th>
+					<th scope="col" class="actions-column">Czynności</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr *ngFor="let user of users">
+					<td class="text-truncate" placement="bottom" data-container="body"
+						[ngbTooltip]="user.login">{{user.login}}</td>
+					<td>{{userRole[user.role]}}</td>
+					<td>{{userStatus[user.status]}}</td>
+					<td>{{user.lastLogin | date:'medium'}}</td>
+					<td>{{!!user.data ? (user.data | json) : null}}</td>
+					<td>
+						<button class="btn btn-info btn-sm"
+							(click)="openUserDetails(user)">Szczegóły</button>
+						<button class="btn btn-danger btn-sm" (click)="deleteUser(user)">Usuń</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<button class="btn btn-success float-right btn-add"
+		(click)="openNewUserModal(newUserModal)">Dodaj nowego
+		użytkownika</button>
+</div>
+
+<ng-template #newUserModal let-c="close" let-d="dismiss">
+<div class="modal-header">
+	<h4 class="modal-title">Nowy użytkownik</h4>
+	<button type="button" class="close" aria-label="Close"
+		(click)="d('Close')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<div class="modal-body" *ngIf="newUser">
+	<dh-user [user]="newUser"></dh-user>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-outline-dark"
+		(click)="d('Cancel')">Zaniechaj</button>
+	<button type="button" class="btn btn-success"
+		[disabled]="isSendingRequest" (click)="createUser()">Zapisz</button>
+</div>
+</ng-template>
